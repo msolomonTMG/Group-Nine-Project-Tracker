@@ -12,8 +12,6 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEdit, faPlusCircle, faCheckCircle, faQuestionCircle, faExclamationCircle, faCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-import InstantSearch from 'vue-instantsearch'
-
 Vue.use(Vuetify, {
   theme: {
     primary: '#080f82',
@@ -25,7 +23,6 @@ Vue.use(Vuetify, {
     success: '#2baf49'
   }
 })
-Vue.use(InstantSearch)
 
 Vue.config.productionTip = false
 

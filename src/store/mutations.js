@@ -22,14 +22,5 @@ export const mutations = {
   },
   setLoading (state, payload) {
     state.loading = payload
-  },
-  setUserPosts (state, payload) {
-    state.userPosts = payload
-  },
-  setAllPatients (state, payload) {
-    state.patients = payload
-  },
-  setGame (state, payload) {
-    state.game = payload
   }
 }

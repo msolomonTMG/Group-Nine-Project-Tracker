@@ -25,14 +25,5 @@ export const getters = {
   },
   getLoading (state) {
     return state.loading
-  },
-  getUserPosts (state) {
-    return state.userPosts
-  },
-  getAllPatients (state) {
-    return state.patients
-  },
-  getGame (state) {
-    return state.game
   }
 }

@@ -7,13 +7,8 @@ const routerOptions = [
   { path: '/', component: 'Landing' },
   { path: '/signin', component: 'Signin' },
   { path: '/signup', component: 'Signup' },
-  { path: '/home', component: 'Home', meta: { requiresAuth: true } },
   { path: '/dashboard', component: 'Dashboard', meta: { requiresAuth: true } },
-  { path: '/team/:teamId', component: 'Team', meta: { requiresAuth: true } },
-  { path: '/department/:department', component: 'Department', meta: { requiresAuth: true } },
-  { path: '/game/:gameId', component: 'Game', meta: { requiresAuth: true } },
-  { path: '/patients', component: 'Patients', meta: { requiresAuth: true } },
-  { path: '/helloworld', component: 'HelloWorld', name: 'HelloWorld' }
+  { path: '/department/:department', component: 'Department', meta: { requiresAuth: true } }
 ]
 
 const routes = routerOptions.map(route => {
