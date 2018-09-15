@@ -9,6 +9,10 @@
       <v-layout row justify-space-between>
         <v-flex xs4>
           <h2>Department Notes</h2>
+          <p>
+            <strong>{{ notes.lastUpdatedDate }}</strong><br />
+            {{ notes.latestNotes }}
+          </p>
         </v-flex>
         <v-flex xs8>
           <ul>
@@ -43,6 +47,10 @@ export default {
   name: 'Department',
   data () {
     return {
+      notes: {
+        latestNotes: '',
+        lastUpdatedDate: ''
+      },
       teams: []
     }
   },
@@ -51,29 +59,48 @@ export default {
     CreateNewProject
   },
   created () {
-    let that = this // once we get into airtableBase(...) we lose context
-    airtableBase('Teams').select({
-      view: 'All Teams',
-      filterByFormula: `SEARCH("${that.$route.params.department}", Department)`
-    }).eachPage(function page (teams, fetchNextPage) {
-      teams.forEach(team => {
-        team.projectObjects = []
-
-        if (team.fields.Projects) {
-          for (const project of team.fields.Projects) {
-            airtableBase('Projects').find(project, (err, record) => {
-              if (err) { console.error(err); return }
-              team.projectObjects.push(record)
-            })
-          }
+    this.getDepartmentTeamsInfo()
+    this.getLatestDepartmentNotes()
+  },
+  methods: {
+    getLatestDepartmentNotes () {
+      let that = this // once we get into airtableBase(...) we lose context
+      airtableBase('Departments').select({
+        view: 'All Departments',
+        filterByFormula: `SEARCH("${that.$route.params.department}", Name)`
+      }).eachPage(function page (departments, fetchNextPage) {
+        console.log(departments)
+        that.notes = {
+          latestNotes: departments[0].fields['Department Notes'][0],
+          lastUpdatedDate: departments[0].fields['Latest Notes']
         }
-        that.teams.push(team)
       })
-      fetchNextPage()
-    }, function done (err) {
-      if (err) { console.error(err); return }
-      return that.teams
-    })
+    },
+    getDepartmentTeamsInfo () {
+      let that = this // once we get into airtableBase(...) we lose context
+      airtableBase('Teams').select({
+        view: 'All Teams',
+        filterByFormula: `SEARCH("${that.$route.params.department}", Department)`
+      }).eachPage(function page (teams, fetchNextPage) {
+        teams.forEach(team => {
+          team.projectObjects = []
+
+          if (team.fields.Projects) {
+            for (const project of team.fields.Projects) {
+              airtableBase('Projects').find(project, (err, record) => {
+                if (err) { console.error(err); return }
+                team.projectObjects.push(record)
+              })
+            }
+          }
+          that.teams.push(team)
+        })
+        fetchNextPage()
+      }, function done (err) {
+        if (err) { console.error(err); return }
+        return that.teams
+      })
+    }
   }
 }
 </script>
