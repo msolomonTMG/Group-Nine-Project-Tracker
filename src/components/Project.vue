@@ -24,7 +24,7 @@
           <v-flex xs6 class="text-xs-right">
             <p>
               <strong>End Date</strong><br/>
-              {{ this.computedStartDate }}
+              {{ this.computedEndDate }}
             </p>
           </v-flex>
         </v-layout>
@@ -135,6 +135,13 @@ export default {
         return ''
       } else {
         return this.project.fields['Target Start']
+      }
+    },
+    computedEndDate () {
+      if (!this.project.fields['Target End']) {
+        return ''
+      } else {
+        return this.project.fields['Target End']
       }
     }
   }
