@@ -69,7 +69,6 @@ export default {
         view: 'All Departments',
         filterByFormula: `SEARCH("${that.$route.params.department}", Name)`
       }).eachPage(function page (departments, fetchNextPage) {
-        console.log(departments)
         that.notes = {
           latestNotes: departments[0].fields['Department Notes'][0],
           lastUpdatedDate: departments[0].fields['Latest Notes']

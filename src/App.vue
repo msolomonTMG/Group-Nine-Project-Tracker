@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app dark>
     <!-- <v-navigation-drawer temporary v-model="sidebar">
       <v-list>
         <v-list-tile
@@ -36,7 +36,7 @@
           v-for="item in menuItems"
           :key="item.title"
           :to="item.path">
-          <v-icon left dark>{{ item.icon }}</v-icon>
+          <v-icon left>{{ item.icon }}</v-icon>
           {{ item.title }}
         </v-btn>
         <v-btn flat v-if="isAuthenticated" @click="userSignOut">
@@ -89,6 +89,3 @@
     }
   }
 </script>
-<!--<style lang="stylus">
-  @import './stylus/main'
-</style>-->

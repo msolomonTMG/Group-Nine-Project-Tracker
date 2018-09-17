@@ -1,7 +1,7 @@
 import Vue from 'vue'
 
 import Vuetify from 'vuetify'
-import 'vuetify/dist/vuetify.css'
+import './stylus/main.styl'
 
 import App from './App'
 import router from './router'
