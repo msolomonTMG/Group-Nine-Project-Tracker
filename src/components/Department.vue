@@ -17,7 +17,12 @@
         <v-flex xs8>
           <ul>
             <li v-for="team in teams">
-              <h2>{{ team.fields.Name }}</h2>
+              <div class="h-50">
+                <h2>
+                  <img v-bind:src="team.fields.Logo" style="vertical-align:middle" height="50px">
+                  <span style="vertical-align:middle">{{ team.fields.Name }}</span>
+                </h2>
+              </div>
               <div v-for="project in team.projectObjects">
                 <v-flex sm6>
                   <Project v-bind:project="project"></Project>
