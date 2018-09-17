@@ -1,7 +1,7 @@
 <template>
   <v-layout row justify-center>
     <v-dialog v-model="dialog" persistent max-width="290">
-      <v-btn round slot="activator" color="accent" dark>
+      <v-btn round slot="activator" color="primary" dark>
         <font-awesome-icon icon="plus-circle" />
         <span class="padding-left"> Add New Project</span>
       </v-btn>
