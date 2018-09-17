@@ -17,6 +17,14 @@
         <v-layout row class="side-padding">
           <v-flex xs6>
             <p>
+              <strong>Owner</strong><br />
+              {{ this.computedOwner }}
+            </p>
+          </v-flex>
+        </v-layout>
+        <v-layout row class="side-padding">
+          <v-flex xs6>
+            <p>
               <strong>Start Date</strong><br/>
               {{ this.computedStartDate }}
             </p>
@@ -115,6 +123,13 @@ export default {
   computed: {
     sortedStatusHistory () {
       return _.orderBy(this.statusHistory, function (h) { return h.fields.Name }, 'desc')
+    },
+    computedOwner () {
+      if (!this.project.fields['Owner Name']) {
+        return ''
+      } else {
+        return this.project.fields['Owner Name'][0]
+      }
     },
     computedStatus () {
       if (!this.project.fields['Latest Status']) {
