@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app dark>
     <!-- <v-navigation-drawer temporary v-model="sidebar">
       <v-list>
         <v-list-tile
