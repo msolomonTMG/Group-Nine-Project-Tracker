@@ -8,6 +8,15 @@ export const mutations = {
   setAirtableTeams (state, payload) {
     state.airtableTeams = payload
   },
+  setAirtableStatuses (state, payload) {
+    state.airtableStatuses = payload
+  },
+  setDispatchedStatuses (state, payload) {
+    state.dispatchedStatuses = payload
+  },
+  setDispatchedProjects (state, payload) {
+    state.dispatchedProjects = payload
+  },
   setDispatchedTeamsForTeamProjectList (state, payload) {
     state.dispatchedTeamsForTeamProjectList = payload
   },

@@ -3,21 +3,31 @@
     <v-container fluid grid-list-md>
       <v-layout row justify-space-between>
         <v-flex xs12>
-          <h1>{{ this.$route.params.department }}</h1>
+          <h1>
+            <img v-bind:src="department.fields.Logo" style="vertical-align:middle" height="50px">
+            <span style="vertical-align:middle">{{ this.$route.params.department }}</span>
+          </h1>
         </v-flex>
       </v-layout>
       <v-layout row justify-space-between>
         <v-flex xs4>
           <h2>Department Notes</h2>
           <p>
-            <strong>{{ notes.lastUpdatedDate }}</strong><br />
-            {{ notes.latestNotes }}
+            <strong>{{ department.fields['Latest Notes'] }}</strong><br />
+            {{ department.fields['Department Notes'][0] }}
           </p>
         </v-flex>
         <v-flex xs8>
           <ul>
             <li v-for="team in teams">
-              <h2>{{ team.fields.Name }}</h2>
+              <div class="h-50">
+                <h2>
+                  <a :href="'/department/' + team.fields['Department Name'] + '/team/' + team.fields['Name']">
+                    <img v-bind:src="team.fields.Logo" style="vertical-align:middle" height="50px">
+                    <span style="vertical-align:middle">{{ team.fields.Name }}</span>
+                  </a>
+                </h2>
+              </div>
               <div v-for="project in team.projectObjects">
                 <v-flex sm6>
                   <Project v-bind:project="project"></Project>
@@ -47,6 +57,13 @@ export default {
   name: 'Department',
   data () {
     return {
+      department: {
+        fields: {
+          'Department Notes': [''],
+          'Latest Notes': '',
+          Logo: ''
+        }
+      },
       notes: {
         latestNotes: '',
         lastUpdatedDate: ''
@@ -69,10 +86,7 @@ export default {
         view: 'All Departments',
         filterByFormula: `SEARCH("${that.$route.params.department}", Name)`
       }).eachPage(function page (departments, fetchNextPage) {
-        that.notes = {
-          latestNotes: departments[0].fields['Department Notes'][0],
-          lastUpdatedDate: departments[0].fields['Latest Notes']
-        }
+        that.department = departments[0]
       })
     },
     getDepartmentTeamsInfo () {
@@ -118,6 +132,7 @@ li {
   margin: 0 10px;
 }
 a {
-  color: #42b983;
+  color: #ffffff;
+  text-decoration: none;
 }
 </style>

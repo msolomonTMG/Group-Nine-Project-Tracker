@@ -5,6 +5,12 @@ export const getters = {
   getDispatchedProjectsForTeamProjectList (state) {
     return state.dispatchedProjectsForTeamProjectList
   },
+  getDispatchedStatuses (state) {
+    return state.dispatchedStatuses
+  },
+  getDispatchedProjects (state) {
+    return state.dispatchedProjects
+  },
   getAirtableProjects (state) {
     return state.airtableProjects
   },
@@ -13,6 +19,9 @@ export const getters = {
   },
   getAirtableTeams (state) {
     return state.airtableTeams
+  },
+  getAirtableStatuses (state) {
+    return state.airtableStatuses
   },
   appTitle (state) {
     return state.appTitle

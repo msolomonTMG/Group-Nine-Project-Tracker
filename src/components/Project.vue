@@ -17,6 +17,14 @@
         <v-layout row class="side-padding">
           <v-flex xs6>
             <p>
+              <strong>Owner</strong><br />
+              {{ this.computedOwner }}
+            </p>
+          </v-flex>
+        </v-layout>
+        <v-layout row class="side-padding">
+          <v-flex xs6>
+            <p>
               <strong>Start Date</strong><br/>
               {{ this.computedStartDate }}
             </p>
@@ -30,12 +38,9 @@
         </v-layout>
         <v-layout row class="side-padding">
           <v-flex xs9>
-            <strong>Status
-              <v-tooltip right>
-                <span slot="activator"><font-awesome-icon icon="plus-circle" /></span>
-                <span>Add a new status</span>
-              </v-tooltip>
-             </strong>
+            <strong>
+              Status <CreateNewStatus :projectId="project.id"></CreateNewStatus>
+            </strong>
           </v-flex>
           <v-flex xs3 class="text-xs-right">
             <strong>Last Updated</strong>
@@ -85,16 +90,15 @@
 
 <script>
 import ProjectStatus from './ProjectStatus.vue'
+import CreateNewStatus from './CreateNewStatus.vue'
 import _ from 'lodash'
-import Airtable from 'airtable'
-import { airtableConfig } from '../config'
-let airtableBase = new Airtable({apiKey: airtableConfig.apiKey}).base(airtableConfig.base)
 
 export default {
   name: 'Project',
   props: ['project'],
   components: {
-    ProjectStatus
+    ProjectStatus,
+    CreateNewStatus
   },
   data () {
     return {
@@ -102,19 +106,35 @@ export default {
     }
   },
   created () {
-    if (this.project.fields['Status Updates']) {
-      this.project.fields['Status Updates'].forEach(status => {
-        let that = this // once we get into airtableBase(...) we lose context
-        airtableBase('Status Updates').find(status, (err, record) => {
-          if (err) { console.error(err); return }
-          that.statusHistory.push(record)
-        })
-      })
+    if (!this.$store.getters.getDispatchedStatuses) {
+      this.$store.dispatch('setAirtableStatuses')
+      this.$store.dispatch('setDispatchedStatuses', true)
     }
+    this.$store.watch((state) => {
+      return this.$store.getters.getAirtableStatuses
+    }, (newValue, oldValue) => {
+      this.statusHistory = []
+      newValue.forEach(status => {
+        if (status.fields.Project && status.fields.Project[0] === this.project.id) {
+          this.statusHistory.push(status)
+        }
+      })
+    }, {
+      deep: true
+    })
   },
   computed: {
     sortedStatusHistory () {
-      return _.orderBy(this.statusHistory, function (h) { return h.fields.Name }, 'desc')
+      let orderedStatuses = _.orderBy(this.statusHistory, function (h) { return h.fields.Created }, 'desc')
+      orderedStatuses.shift() // remove latest status from history
+      return orderedStatuses
+    },
+    computedOwner () {
+      if (!this.project.fields['Owner Name']) {
+        return ''
+      } else {
+        return this.project.fields['Owner Name'][0]
+      }
     },
     computedStatus () {
       if (!this.project.fields['Latest Status']) {
