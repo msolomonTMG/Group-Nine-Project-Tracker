@@ -34,5 +34,8 @@ export const getters = {
   },
   getLoading (state) {
     return state.loading
+  },
+  getSnackbar (state) {
+    return state.snackbar
   }
 }

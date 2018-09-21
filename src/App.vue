@@ -1,5 +1,6 @@
 <template>
   <v-app dark>
+    <Snackbar></Snackbar>
     <!-- <v-navigation-drawer temporary v-model="sidebar">
       <v-list>
         <v-list-tile
@@ -55,12 +56,17 @@
   </v-app>
 </template>
 <script>
+  import Snackbar from './components/Snackbar.vue'
+  
   export default {
     data () {
       return {
         // appTitle: 'Awesome App',
         sidebar: false
       }
+    },
+    components: {
+      Snackbar
     },
     computed: {
       appTitle () {

@@ -6,6 +6,9 @@ import router from '@/router'
 let airtableBase = new Airtable({apiKey: airtableConfig.apiKey}).base(airtableConfig.base)
 
 export const actions = {
+  setSnackbar ({commit}, payload) {
+    return commit('setSnackbar', payload)
+  },
   setDispatchedTeamsForTeamProjectList ({commit}, payload) {
     return commit('setDispatchedTeamsForTeamProjectList', payload)
   },

@@ -3,6 +3,7 @@ export const state = {
   user: null,
   error: null,
   loading: false,
+  snackbar: null,
   airtableProjects: null,
   airtableDepartments: null,
   airtableTeams: null,

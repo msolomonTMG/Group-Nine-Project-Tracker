@@ -68,6 +68,11 @@ export default {
         if (err) { console.error(err); return }
         this.$store.dispatch('setAirtableStatuses')
         this.$store.dispatch('setAirtableProjects')
+        this.$store.dispatch('setSnackbar', {
+          show: true,
+          message: 'Status Created',
+          color: 'success'
+        })
       })
     }
   }

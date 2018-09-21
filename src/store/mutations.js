@@ -1,4 +1,7 @@
 export const mutations = {
+  setSnackbar (state, payload) {
+    state.snackbar = payload
+  },
   setAirtableProjects (state, payload) {
     state.airtableProjects = payload
   },
