@@ -6,6 +6,8 @@ export const state = {
   airtableProjects: null,
   airtableDepartments: null,
   airtableTeams: null,
+  airtableStatuses: null,
+  dispatchedStatuses: false,
   dispatchedTeamsForTeamProjectList: false,
   dispatchedProjectsForTeamProjectList: false
 }

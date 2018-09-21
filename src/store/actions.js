@@ -12,6 +12,9 @@ export const actions = {
   setDispatchedProjectsForTeamProjectList ({commit}, payload) {
     return commit('setDispatchedProjectsForTeamProjectList', payload)
   },
+  setDispatchedStatuses ({commit}, payload) {
+    return commit('setDispatchedStatuses', payload)
+  },
   setAirtableProjects ({commit}, payload) {
     let projects = []
     airtableBase('Projects').select({
@@ -52,6 +55,20 @@ export const actions = {
     }, function done (err) {
       if (err) { console.error(err); return }
       return commit('setAirtableTeams', teams)
+    })
+  },
+  setAirtableStatuses ({commit}, payload) {
+    let statuses = []
+    airtableBase('Status Updates').select({
+      view: 'All Statuses'
+    }).eachPage(function page (records, fetchNextPage) {
+      records.forEach(record => {
+        statuses.push(record)
+      })
+      fetchNextPage()
+    }, function done (err) {
+      if (err) { console.error(err); return }
+      return commit('setAirtableStatuses', statuses)
     })
   },
   userSignUp ({commit}, payload) {

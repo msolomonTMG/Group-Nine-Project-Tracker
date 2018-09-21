@@ -92,9 +92,6 @@
 import ProjectStatus from './ProjectStatus.vue'
 import CreateNewStatus from './CreateNewStatus.vue'
 import _ from 'lodash'
-import Airtable from 'airtable'
-import { airtableConfig } from '../config'
-let airtableBase = new Airtable({apiKey: airtableConfig.apiKey}).base(airtableConfig.base)
 
 export default {
   name: 'Project',
@@ -109,15 +106,21 @@ export default {
     }
   },
   created () {
-    if (this.project.fields['Status Updates']) {
-      this.project.fields['Status Updates'].forEach(status => {
-        let that = this // once we get into airtableBase(...) we lose context
-        airtableBase('Status Updates').find(status, (err, record) => {
-          if (err) { console.error(err); return }
-          that.statusHistory.push(record)
-        })
-      })
+    if (!this.$store.getters.getDispatchedStatuses) {
+      this.$store.dispatch('setAirtableStatuses')
+      this.$store.dispatch('setDispatchedStatuses', true)
     }
+    this.$store.watch((state) => {
+      return this.$store.getters.getAirtableStatuses
+    }, (newValue, oldValue) => {
+      newValue.forEach(status => {
+        if (status.fields.Project && status.fields.Project[0] === this.project.id) {
+          this.statusHistory.push(status)
+        }
+      })
+    }, {
+      deep: true
+    })
   },
   computed: {
     sortedStatusHistory () {
