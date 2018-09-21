@@ -113,6 +113,7 @@ export default {
     this.$store.watch((state) => {
       return this.$store.getters.getAirtableStatuses
     }, (newValue, oldValue) => {
+      this.statusHistory = []
       newValue.forEach(status => {
         if (status.fields.Project && status.fields.Project[0] === this.project.id) {
           this.statusHistory.push(status)
@@ -124,7 +125,7 @@ export default {
   },
   computed: {
     sortedStatusHistory () {
-      return _.orderBy(this.statusHistory, function (h) { return h.fields.Name }, 'desc')
+      return _.orderBy(this.statusHistory, function (h) { return h.fields.Created }, 'desc')
     },
     computedOwner () {
       if (!this.project.fields['Owner Name']) {

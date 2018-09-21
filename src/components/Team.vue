@@ -4,8 +4,8 @@
       <v-layout row justify-space-between>
         <v-flex xs12>
           <p>
-            <a :href="'/department/' + team.fields['Department Name']">
-              {{ team.fields['Department Name'][0] }}
+            <a :href="'/department/' + departmentName">
+              {{ departmentName }}
             </a>
           </p>
           <h1>
@@ -19,11 +19,11 @@
           <h2>Team Notes</h2>
         </v-flex>
         <v-flex xs8>
+          <CreateNewProject v-bind:teamId="team.id"></CreateNewProject>
           <ul>
             <li v-for="project in projects">
               <v-flex sm6>
                 <Project v-bind:project="project"></Project>
-                <CreateNewProject v-bind:teamId="team.id"></CreateNewProject>
               </v-flex>
             </li>
           </ul>
@@ -60,7 +60,30 @@ export default {
   },
   created () {
     this.getTeam()
-    this.getTeamProjects()
+    if (!this.$store.getters.getDispatchedProjects) {
+      this.$store.dispatch('setAirtableProjects')
+      this.$store.dispatch('setDispatchedProjects', true)
+    }
+    this.$store.watch((state) => {
+      return this.$store.getters.getAirtableProjects
+    }, (newValue, oldValue) => {
+      this.projects = []
+      newValue.forEach(project => {
+        if (project.fields['Team Name Lookup'] &&
+            project.fields['Team Name Lookup'][0] === this.$route.params.team) {
+          this.projects.push(project)
+        }
+      })
+    }, {
+      deep: true
+    })
+  },
+  computed: {
+    departmentName () {
+      if (this.team.fields['Department Name']) {
+        return this.team.fields['Department Name'][0]
+      }
+    }
   },
   methods: {
     getTeam () {
@@ -69,7 +92,9 @@ export default {
         view: 'All Teams',
         filterByFormula: `SEARCH("${that.$route.params.team}", Name)`
       }).eachPage(function page (teams, fetchNextPage) {
-        that.team = teams[0]
+        if (teams) {
+          that.team = teams[0]
+        }
       }, function done (err) {
         if (err) { console.error(err); return }
         return that.team

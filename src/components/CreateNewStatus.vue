@@ -66,7 +66,8 @@ export default {
         'Status': this.status
       }, (err, record) => {
         if (err) { console.error(err); return }
-        console.log(record)
+        this.$store.dispatch('setAirtableStatuses')
+        this.$store.dispatch('setAirtableProjects')
       })
     }
   }

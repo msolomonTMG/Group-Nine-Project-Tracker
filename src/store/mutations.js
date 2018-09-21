@@ -14,6 +14,9 @@ export const mutations = {
   setDispatchedStatuses (state, payload) {
     state.dispatchedStatuses = payload
   },
+  setDispatchedProjects (state, payload) {
+    state.dispatchedProjects = payload
+  },
   setDispatchedTeamsForTeamProjectList (state, payload) {
     state.dispatchedTeamsForTeamProjectList = payload
   },

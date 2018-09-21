@@ -8,6 +8,9 @@ export const getters = {
   getDispatchedStatuses (state) {
     return state.dispatchedStatuses
   },
+  getDispatchedProjects (state) {
+    return state.dispatchedProjects
+  },
   getAirtableProjects (state) {
     return state.airtableProjects
   },

@@ -12,6 +12,9 @@ export const actions = {
   setDispatchedProjectsForTeamProjectList ({commit}, payload) {
     return commit('setDispatchedProjectsForTeamProjectList', payload)
   },
+  setDispatchedProjects ({commit}, payload) {
+    return commit('setDispatchedProjects', payload)
+  },
   setDispatchedStatuses ({commit}, payload) {
     return commit('setDispatchedStatuses', payload)
   },
