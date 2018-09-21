@@ -38,12 +38,9 @@
         </v-layout>
         <v-layout row class="side-padding">
           <v-flex xs9>
-            <strong>Status
-              <v-tooltip right>
-                <span slot="activator"><font-awesome-icon icon="plus-circle" /></span>
-                <span>Add a new status</span>
-              </v-tooltip>
-             </strong>
+            <strong>
+              Status <CreateNewStatus :projectId="project.id"></CreateNewStatus>
+            </strong>
           </v-flex>
           <v-flex xs3 class="text-xs-right">
             <strong>Last Updated</strong>
@@ -93,6 +90,7 @@
 
 <script>
 import ProjectStatus from './ProjectStatus.vue'
+import CreateNewStatus from './CreateNewStatus.vue'
 import _ from 'lodash'
 import Airtable from 'airtable'
 import { airtableConfig } from '../config'
@@ -102,7 +100,8 @@ export default {
   name: 'Project',
   props: ['project'],
   components: {
-    ProjectStatus
+    ProjectStatus,
+    CreateNewStatus
   },
   data () {
     return {
