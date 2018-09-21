@@ -125,7 +125,9 @@ export default {
   },
   computed: {
     sortedStatusHistory () {
-      return _.orderBy(this.statusHistory, function (h) { return h.fields.Created }, 'desc')
+      let orderedStatuses = _.orderBy(this.statusHistory, function (h) { return h.fields.Created }, 'desc')
+      orderedStatuses.shift() // remove latest status from history
+      return orderedStatuses
     },
     computedOwner () {
       if (!this.project.fields['Owner Name']) {
