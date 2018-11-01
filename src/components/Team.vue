@@ -69,8 +69,8 @@ export default {
     }, (newValue, oldValue) => {
       this.projects = []
       newValue.forEach(project => {
-        if (project.fields['Team Name Lookup'] &&
-            project.fields['Team Name Lookup'][0] === this.$route.params.team) {
+        if (project.fields['Team'] &&
+            project.fields['Team'][0] === this.$route.params.team) {
           this.projects.push(project)
         }
       })
