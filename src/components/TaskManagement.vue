@@ -61,25 +61,35 @@
                 <li v-for="task in tasks">
                   <v-card class="task-card" color="purple lighten-2" dark>
                     <v-layout row wrap>
-                      <v-flex d-flex xs6>
-                        <v-card-text>{{ task.fields.Name.slice(0,54) }}...</v-card-text>
+                      <v-flex d-flex xs8>
+                        <v-card-text>
+                          {{ task.fields.Name }}
+                            <!-- <span v-if="task.fields.Name && task.fields.Name.length > 58">
+                              {{ task.fields.Name.slice(0,54) }}...
+                            </span>
+                            <span v-else>
+                              {{ task.fields.Name }}
+                            </span> -->
+                        </v-card-text>
                       </v-flex>
-                      <v-flex d-flex xs6>
-                        <div class="pull-right pr-15">
-                          <v-chip v-if="task.fields['Project Name Rollup'] && task.fields['Project Name Rollup'].length > 43">
-                            {{ task.fields['Project Name Rollup'].slice(0,40) }}...
-                          </v-chip>
-                          <v-chip v-else-if="task.fields['Project Name Rollup'] && task.fields['Project Name Rollup'].length <= 43">
-                            {{ task.fields['Project Name Rollup'].slice(0,40) }}
-                          </v-chip>
-                          <v-avatar>
-                          <img
-                            v-if="task.fields['Assignee Photo Lookup']"
-                            v-bind:src="task.fields['Assignee Photo Lookup'][0].thumbnails.large.url"
-                            alt="Avatar"
-                          >
-                          </v-avatar>
-                        </div>
+                      <v-flex d-flex xs4>
+                        <v-card-text>
+                          <div class="pull-right pr-15">
+                            <v-chip v-if="task.fields['Project Name Rollup'] && task.fields['Project Name Rollup'].length > 21">
+                              {{ task.fields['Project Name Rollup'].slice(0,21).trim() }}...
+                            </v-chip>
+                            <v-chip v-else-if="task.fields['Project Name Rollup'] && task.fields['Project Name Rollup'].length <= 21">
+                              {{ task.fields['Project Name Rollup'] }}
+                            </v-chip>
+                            <v-avatar size="32px">
+                            <img
+                              v-if="task.fields['Assignee Photo Lookup']"
+                              v-bind:src="task.fields['Assignee Photo Lookup'][0].thumbnails.large.url"
+                              alt="Avatar"
+                            >
+                            </v-avatar>
+                          </div>
+                        </v-card-text>
                       </v-flex>
                     </v-layout>
                   </v-card>
