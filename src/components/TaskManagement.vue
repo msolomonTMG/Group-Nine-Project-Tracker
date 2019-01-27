@@ -75,10 +75,10 @@
                       <v-flex d-flex xs4>
                         <v-card-text>
                           <div class="pull-right pr-15">
-                            <v-chip v-if="task.fields['Project Name Rollup'] && task.fields['Project Name Rollup'].length > 21">
-                              {{ task.fields['Project Name Rollup'].slice(0,21).trim() }}...
+                            <v-chip v-if="task.fields['Project Name Rollup'] && task.fields['Project Name Rollup'].length > 20">
+                              {{ task.fields['Project Name Rollup'].slice(0,20).trim() }}...
                             </v-chip>
-                            <v-chip v-else-if="task.fields['Project Name Rollup'] && task.fields['Project Name Rollup'].length <= 21">
+                            <v-chip v-else-if="task.fields['Project Name Rollup'] && task.fields['Project Name Rollup'].length <= 20">
                               {{ task.fields['Project Name Rollup'] }}
                             </v-chip>
                             <v-avatar size="32px">
