@@ -80,7 +80,8 @@ export const actions = {
   setAirtableTasks ({commit}, payload) {
     let tasks = []
     airtableBase('Tasks').select({
-      view: 'All Tasks'
+      view: 'All Tasks',
+      filterByFormula: payload.filters
     }).eachPage(function page (records, fetchNextPage) {
       records.forEach(record => {
         tasks.push(record)
@@ -90,6 +91,9 @@ export const actions = {
       if (err) { console.error(err); return }
       return commit('setAirtableTasks', tasks)
     })
+  },
+  setAirtableProjectFilter ({commit}, payload) {
+    return commit('setAirtableProjectFilter', payload.projects)
   },
   userSignUp ({commit}, payload) {
     commit('setLoading', true)

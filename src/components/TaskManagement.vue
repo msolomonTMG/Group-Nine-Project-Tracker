@@ -4,12 +4,11 @@
       <v-flex d-flex xs12 sm6 md2 child-flex>
         <v-card color="green lighten-2" dark>
           <v-card-text><h3>Projects</h3></v-card-text>
-          <v-card color="blue lighten-2" dark>
-            <v-card-text>Project 1</v-card-text>
-          </v-card>
-          <v-card color="yellow lighten-2" dark>
-            <v-card-text>Project 2</v-card-text>
-          </v-card>
+          <ul>
+            <li v-for="project in projects">
+              <ProjectCardFilter :project="project"></ProjectCardFilter>
+            </li>
+          </ul>
         </v-card>
       </v-flex>
       <v-flex d-flex xs12 sm6 md2 child-flex>
@@ -58,18 +57,13 @@
             <v-card-text><h4>Backlog</h4></v-card-text>
             <v-container>
               <ul>
-                <li v-for="task in tasks">
-                  <v-card class="task-card" color="purple lighten-2" dark>
+                <transition-group name="list" tag="p">
+                  <li v-for="task in tasks" v-bind:key="task.id" class="list-item">
+                  <v-card class="mt-2" color="purple lighten-2" dark>
                     <v-layout row wrap>
                       <v-flex d-flex xs8>
                         <v-card-text>
                           {{ task.fields.Name }}
-                            <!-- <span v-if="task.fields.Name && task.fields.Name.length > 58">
-                              {{ task.fields.Name.slice(0,54) }}...
-                            </span>
-                            <span v-else>
-                              {{ task.fields.Name }}
-                            </span> -->
                         </v-card-text>
                       </v-flex>
                       <v-flex d-flex xs4>
@@ -94,6 +88,7 @@
                     </v-layout>
                   </v-card>
                 </li>
+                </transition-group>
               </ul>
             </v-container>
           </v-card>
@@ -104,23 +99,71 @@
 </template>
 
 <script>
+import ProjectCardFilter from './ProjectCardFilter.vue'
+
 export default {
   name: 'TaskManagmeent',
   data () {
     return {
       tasks: [],
+      projects: [],
       lorem: `Lorem ipsum dolor sit amet, mel at clita quando. Te sit oratio vituperatoribus, nam ad ipsum posidonium mediocritatem, explicari dissentiunt cu mea. Repudiare disputationi vim in, mollis iriure nec cu, alienum argumentum ius ad. Pri eu justo aeque torquatos.`
     }
   },
+  components: {
+    ProjectCardFilter
+  },
+  methods: {
+    sortProjectsAlphabetically (projects) {
+      this.projects = projects.sort(function (a, b) {
+        let textA = a.fields.Name.toUpperCase()
+        let textB = b.fields.Name.toUpperCase()
+        return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
+      })
+    }
+  },
   created () {
-    this.$store.dispatch('setAirtableTasks')
+    this.$store.dispatch('setAirtableTasks', { filters: '' })
+    this.$store.dispatch('setAirtableProjects')
     this.tasks = this.$store.getters.getAirtableTasks
-    // watch state for updates
+    this.projects = this.$store.getters.getAirtableProjects
+    // watch state for updates to tasks
     this.$store.watch((state) => {
       return this.$store.getters.getAirtableTasks
     }, (newValue, oldValue) => {
       if (newValue) {
         this.tasks = newValue
+      }
+    })
+    // watch state for updates to projects
+    this.$store.watch((state) => {
+      return this.$store.getters.getAirtableProjects
+    }, (newValue, oldValue) => {
+      if (newValue) {
+        this.sortProjectsAlphabetically(newValue)
+      }
+    })
+    // watch state for updated to project filter
+    this.$store.watch((state) => {
+      return this.$store.getters.getAirtableProjectFilter
+    }, (newValue, oldValue) => {
+      if (newValue && newValue.length > 0) {
+        let filterFormula = 'OR('
+        for (const [index, projectName] of newValue.entries()) {
+          filterFormula += `Project = "${projectName}"`
+          // if its not the last project, add a comma
+          if (index + 1 !== newValue.length) {
+            filterFormula += ','
+          }
+        }
+        console.log(filterFormula + ')')
+        this.$store.dispatch('setAirtableTasks', {
+          filters: filterFormula + ')'
+        })
+      } else {
+        this.$store.dispatch('setAirtableTasks', {
+          filters: ''
+        })
       }
     })
   }
@@ -135,8 +178,12 @@ ul {
 li {
   margin: 0 10px;
 }
-.task-card {
-  margin-top: 10px;
+.list-enter-active, .list-leave-active {
+  transition: all 1s;
+}
+.list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(30px);
 }
 .pull-right {
   float: right;

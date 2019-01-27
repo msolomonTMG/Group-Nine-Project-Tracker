@@ -26,6 +26,9 @@ export const getters = {
   getAirtableTasks (state) {
     return state.airtableTasks
   },
+  getAirtableProjectFilter (state) {
+    return state.airtableProjectFilter
+  },
   appTitle (state) {
     return state.appTitle
   },
