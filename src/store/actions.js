@@ -77,6 +77,20 @@ export const actions = {
       return commit('setAirtableStatuses', statuses)
     })
   },
+  setAirtableTasks ({commit}, payload) {
+    let tasks = []
+    airtableBase('Tasks').select({
+      view: 'All Tasks'
+    }).eachPage(function page (records, fetchNextPage) {
+      records.forEach(record => {
+        tasks.push(record)
+      })
+      fetchNextPage()
+    }, function done (err) {
+      if (err) { console.error(err); return }
+      return commit('setAirtableTasks', tasks)
+    })
+  },
   userSignUp ({commit}, payload) {
     commit('setLoading', true)
     firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
