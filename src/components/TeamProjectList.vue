@@ -27,7 +27,7 @@ export default {
     let projectsInState = this.$store.getters.getAirtableProjects
     let dispatchedProjectsForTeamProjectList = this.$store.getters.dispatchedProjectsForTeamProjectList
     if (!projectsInState && !dispatchedProjectsForTeamProjectList) {
-      this.$store.dispatch('setAirtableProjects')
+      this.$store.dispatch('setAirtableProjects', { filters: '' })
       this.$store.dispatch('setDispatchedProjectsForTeamProjectList', true)
     } else if (projectsInState) {
       projectsInState.forEach(project => {

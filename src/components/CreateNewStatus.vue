@@ -67,7 +67,7 @@ export default {
       }, (err, record) => {
         if (err) { console.error(err); return }
         this.$store.dispatch('setAirtableStatuses')
-        this.$store.dispatch('setAirtableProjects')
+        this.$store.dispatch('setAirtableProjects', { filters: '' })
         this.$store.dispatch('setSnackbar', {
           show: true,
           message: 'Status Created',
