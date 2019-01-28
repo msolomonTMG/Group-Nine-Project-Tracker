@@ -27,18 +27,41 @@
       </v-flex>
       <v-flex d-flex xs12 sm6 md2 child-flex>
         <v-card color="green lighten-2" dark>
-          <v-card-text><h3>Phases</h3></v-card-text>
-          <v-card color="blue lighten-2" dark>
-            <v-card-text>Phase 1</v-card-text>
-          </v-card>
-          <v-card color="yellow lighten-2" dark>
-            <v-card-text>Phase 2</v-card-text>
-          </v-card>
+          <v-card-text>
+            <h3>
+              Phases
+              <small>
+                <v-text-field
+                  v-model="phaseFilter"
+                  label="filter phases"
+                ></v-text-field>
+              </small>
+            </h3>
+          </v-card-text>
+          <ul>
+            <li v-for="phase in filteredPhases">
+              <v-card class="mt-1" dark>
+                <v-card-text>
+                  {{ phase.fields.Name }}
+                </v-card-text>
+              </v-card>
+            </li>
+          </ul>
         </v-card>
       </v-flex>
       <v-flex d-flex xs12 sm6 md7 child-flex>
         <v-card color="green lighten-2" dark>
-          <v-card-text><h3>Tasks</h3></v-card-text>
+          <v-card-text>
+            <h3>
+              Tasks
+              <small>
+                <v-text-field
+                  v-model="taskFilter"
+                  label="filter tasks"
+                ></v-text-field>
+              </small>
+            </h3>
+          </v-card-text>
           <v-card color="green lighten-1" dark>
             <v-card-text><h4>Week 1</h4></v-card-text>
             <v-container>
@@ -72,7 +95,7 @@
             <v-container>
               <ul>
                 <transition-group name="list" tag="p">
-                  <li v-for="task in tasks" v-bind:key="task.id" class="list-item">
+                  <li v-for="task in filteredTasks" v-bind:key="task.id" class="list-item">
                   <v-card class="mt-2" color="purple lighten-2" dark>
                     <v-layout row wrap>
                       <v-flex d-flex xs8>
@@ -120,16 +143,33 @@ export default {
   data () {
     return {
       tasks: [],
-      projects: [{
-        fields: {
-          Name: 'Test Project'
-        }
-      }],
+      phases: [],
+      projects: [],
+      taskFilter: '',
+      phaseFilter: '',
       projectFilter: '',
       lorem: `Lorem ipsum dolor sit amet, mel at clita quando. Te sit oratio vituperatoribus, nam ad ipsum posidonium mediocritatem, explicari dissentiunt cu mea. Repudiare disputationi vim in, mollis iriure nec cu, alienum argumentum ius ad. Pri eu justo aeque torquatos.`
     }
   },
   computed: {
+    filteredTasks () {
+      if (!this.tasks) {
+        return []
+      } else {
+        return this.tasks.filter(task => {
+          return task.fields.Name.toLowerCase().includes(this.taskFilter.toLowerCase())
+        })
+      }
+    },
+    filteredPhases () {
+      if (!this.phases) {
+        return []
+      } else {
+        return this.phases.filter(phase => {
+          return phase.fields.Name.toLowerCase().includes(this.phaseFilter.toLowerCase())
+        })
+      }
+    },
     filteredProjects () {
       if (!this.projects) {
         return []
@@ -154,10 +194,14 @@ export default {
   },
   created () {
     this.$store.dispatch('setAirtableTasks', { filters: '' })
+    this.$store.dispatch('setAirtablePhases', {
+      filters: '{Is Project Marked Done} = 0'
+    })
     this.$store.dispatch('setAirtableProjects', {
       filters: 'Done = 0'
     })
     this.tasks = this.$store.getters.getAirtableTasks
+    this.phases = this.$store.getters.getAirtablePhases
     this.projects = this.$store.getters.getAirtableProjects
     // watch state for updates to tasks
     this.$store.watch((state) => {
@@ -165,6 +209,14 @@ export default {
     }, (newValue, oldValue) => {
       if (newValue) {
         this.tasks = newValue
+      }
+    })
+    // watch state for updates to phases
+    this.$store.watch((state) => {
+      return this.$store.getters.getAirtablePhases
+    }, (newValue, oldValue) => {
+      if (newValue) {
+        this.phases = newValue
       }
     })
     // watch state for updates to projects
@@ -188,12 +240,17 @@ export default {
             filterFormula += ','
           }
         }
-        console.log(filterFormula + ')')
         this.$store.dispatch('setAirtableTasks', {
+          filters: filterFormula + ')'
+        })
+        this.$store.dispatch('setAirtablePhases', {
           filters: filterFormula + ')'
         })
       } else {
         this.$store.dispatch('setAirtableTasks', {
+          filters: ''
+        })
+        this.$store.dispatch('setAirtablePhases', {
           filters: ''
         })
       }

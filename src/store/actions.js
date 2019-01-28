@@ -36,6 +36,21 @@ export const actions = {
       return commit('setAirtableProjects', projects)
     })
   },
+  setAirtablePhases ({commit}, payload) {
+    let phases = []
+    airtableBase('Phases').select({
+      view: 'All Phases',
+      filterByFormula: payload.filters
+    }).eachPage(function page (records, fetchNextPage) {
+      records.forEach(record => {
+        phases.push(record)
+      })
+      fetchNextPage()
+    }, function done (err) {
+      if (err) { console.error(err); return }
+      return commit('setAirtablePhases', phases)
+    })
+  },
   setAirtableDepartments ({commit}, payload) {
     let departments = []
     airtableBase('Departments').select({
