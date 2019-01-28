@@ -3,10 +3,24 @@
     <v-layout row wrap>
       <v-flex d-flex xs12 sm6 md2 child-flex>
         <v-card color="green lighten-2" dark>
-          <v-card-text><h3>Projects</h3></v-card-text>
+          <v-card-text>
+            <h3>
+              Projects
+              <small>
+                <v-text-field
+                  v-model="projectFilter"
+                  label="filter projects"
+                ></v-text-field>
+              </small>
+            </h3>
+          </v-card-text>
           <ul>
-            <li v-for="project in projects">
-              <ProjectCardFilter :project="project"></ProjectCardFilter>
+            <li v-for="project in filteredProjects">
+              <ProjectCardFilter 
+                :project="project"
+                :key="project.id"
+              >
+              </ProjectCardFilter>
             </li>
           </ul>
         </v-card>
@@ -102,12 +116,28 @@
 import ProjectCardFilter from './ProjectCardFilter.vue'
 
 export default {
-  name: 'TaskManagmeent',
+  name: 'TaskManagment',
   data () {
     return {
       tasks: [],
-      projects: [],
+      projects: [{
+        fields: {
+          Name: 'Test Project'
+        }
+      }],
+      projectFilter: '',
       lorem: `Lorem ipsum dolor sit amet, mel at clita quando. Te sit oratio vituperatoribus, nam ad ipsum posidonium mediocritatem, explicari dissentiunt cu mea. Repudiare disputationi vim in, mollis iriure nec cu, alienum argumentum ius ad. Pri eu justo aeque torquatos.`
+    }
+  },
+  computed: {
+    filteredProjects () {
+      if (!this.projects) {
+        return []
+      } else {
+        return this.projects.filter(project => {
+          return project.fields.Name.toLowerCase().includes(this.projectFilter.toLowerCase())
+        })
+      }
     }
   },
   components: {
@@ -124,7 +154,9 @@ export default {
   },
   created () {
     this.$store.dispatch('setAirtableTasks', { filters: '' })
-    this.$store.dispatch('setAirtableProjects')
+    this.$store.dispatch('setAirtableProjects', {
+      filters: 'Done = 0'
+    })
     this.tasks = this.$store.getters.getAirtableTasks
     this.projects = this.$store.getters.getAirtableProjects
     // watch state for updates to tasks

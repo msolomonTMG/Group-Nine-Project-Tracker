@@ -24,7 +24,8 @@ export const actions = {
   setAirtableProjects ({commit}, payload) {
     let projects = []
     airtableBase('Projects').select({
-      view: 'All Projects'
+      view: 'All Projects',
+      filterByFormula: payload.filters
     }).eachPage(function page (records, fetchNextPage) {
       records.forEach(record => {
         projects.push(record)
