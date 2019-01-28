@@ -14,6 +14,21 @@ export const mutations = {
   setAirtableStatuses (state, payload) {
     state.airtableStatuses = payload
   },
+  setAirtableTasks (state, payload) {
+    state.airtableTasks = payload
+  },
+  setAirtableWeeks (state, payload) {
+    state.airtableWeeks = payload
+  },
+  setAirtablePhases (state, payload) {
+    state.airtablePhases = payload
+  },
+  setAirtableProjectFilter (state, payload) {
+    state.airtableProjectFilter = payload
+  },
+  setAirtablePhaseFilter (state, payload) {
+    state.airtablePhaseFilter = payload
+  },
   setDispatchedStatuses (state, payload) {
     state.dispatchedStatuses = payload
   },

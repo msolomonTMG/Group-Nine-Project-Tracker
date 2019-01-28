@@ -24,7 +24,8 @@ export const actions = {
   setAirtableProjects ({commit}, payload) {
     let projects = []
     airtableBase('Projects').select({
-      view: 'All Projects'
+      view: 'All Projects',
+      filterByFormula: payload.filters
     }).eachPage(function page (records, fetchNextPage) {
       records.forEach(record => {
         projects.push(record)
@@ -33,6 +34,21 @@ export const actions = {
     }, function done (err) {
       if (err) { console.error(err); return }
       return commit('setAirtableProjects', projects)
+    })
+  },
+  setAirtablePhases ({commit}, payload) {
+    let phases = []
+    airtableBase('Phases').select({
+      view: 'All Phases',
+      filterByFormula: payload.filters
+    }).eachPage(function page (records, fetchNextPage) {
+      records.forEach(record => {
+        phases.push(record)
+      })
+      fetchNextPage()
+    }, function done (err) {
+      if (err) { console.error(err); return }
+      return commit('setAirtablePhases', phases)
     })
   },
   setAirtableDepartments ({commit}, payload) {
@@ -76,6 +92,42 @@ export const actions = {
       if (err) { console.error(err); return }
       return commit('setAirtableStatuses', statuses)
     })
+  },
+  setAirtableTasks ({commit}, payload) {
+    let tasks = []
+    airtableBase('Tasks').select({
+      view: 'All Tasks',
+      filterByFormula: payload.filters
+    }).eachPage(function page (records, fetchNextPage) {
+      records.forEach(record => {
+        tasks.push(record)
+      })
+      fetchNextPage()
+    }, function done (err) {
+      if (err) { console.error(err); return }
+      return commit('setAirtableTasks', tasks)
+    })
+  },
+  setAirtableWeeks ({commit}, payload) {
+    let weeks = []
+    airtableBase('Weeks').select({
+      view: 'All Weeks',
+      filterByFormula: payload.filters
+    }).eachPage(function page (records, fetchNextPage) {
+      records.forEach(record => {
+        weeks.push(record)
+      })
+      fetchNextPage()
+    }, function done (err) {
+      if (err) { console.error(err); return }
+      return commit('setAirtableWeeks', weeks)
+    })
+  },
+  setAirtableProjectFilter ({commit}, payload) {
+    return commit('setAirtableProjectFilter', payload.projects)
+  },
+  setAirtablePhaseFilter ({commit}, payload) {
+    return commit('setAirtablePhaseFilter', payload.phases)
   },
   userSignUp ({commit}, payload) {
     commit('setLoading', true)

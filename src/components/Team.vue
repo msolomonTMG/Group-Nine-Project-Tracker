@@ -61,7 +61,7 @@ export default {
   created () {
     this.getTeam()
     if (!this.$store.getters.getDispatchedProjects) {
-      this.$store.dispatch('setAirtableProjects')
+      this.$store.dispatch('setAirtableProjects', { filters: '' })
       this.$store.dispatch('setDispatchedProjects', true)
     }
     this.$store.watch((state) => {

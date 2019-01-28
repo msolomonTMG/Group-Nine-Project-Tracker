@@ -9,7 +9,8 @@ const routerOptions = [
   { path: '/signup', component: 'Signup' },
   { path: '/dashboard', component: 'Dashboard', meta: { requiresAuth: true } },
   { path: '/department/:department', component: 'Department', meta: { requiresAuth: true } },
-  { path: '/department/:department/team/:team', component: 'Team', meta: { requiresAuth: true } }
+  { path: '/department/:department/team/:team', component: 'Team', meta: { requiresAuth: true } },
+  { path: '/tasks', component: 'TaskManagement' }
 ]
 
 const routes = routerOptions.map(route => {

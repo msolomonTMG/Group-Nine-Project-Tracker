@@ -23,6 +23,21 @@ export const getters = {
   getAirtableStatuses (state) {
     return state.airtableStatuses
   },
+  getAirtableTasks (state) {
+    return state.airtableTasks
+  },
+  getAirtablePhases (state) {
+    return state.airtablePhases
+  },
+  getAirtableWeeks (state) {
+    return state.airtableWeeks
+  },
+  getAirtableProjectFilter (state) {
+    return state.airtableProjectFilter
+  },
+  getAirtablePhaseFilter (state) {
+    return state.airtablePhaseFilter
+  },
   appTitle (state) {
     return state.appTitle
   },
