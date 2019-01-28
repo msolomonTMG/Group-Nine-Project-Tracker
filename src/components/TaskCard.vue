@@ -1,8 +1,11 @@
 <template>
-  <v-card class="mt-2" color="purple lighten-2" dark>
+  <v-card class="mt-2" color="grey" dark>
     <v-layout row wrap>
       <v-flex d-flex xs8>
         <v-card-text>
+          <span v-if="task.fields.Status==='Done'">
+            <v-icon slot="actions" color="teal">done</v-icon>
+          </span>
           {{ taskData.fields.Name }}
         </v-card-text>
       </v-flex>
@@ -16,11 +19,11 @@
               {{ taskData.fields['Project Name Rollup'] }}
             </v-chip>
             <v-avatar size="32px">
-            <img
-              v-if="taskData.fields['Assignee Photo Lookup']"
-              v-bind:src="taskData.fields['Assignee Photo Lookup'][0].thumbnails.large.url"
-              alt="Avatar"
-            >
+              <img
+                v-if="taskData.fields['Assignee Photo Lookup']"
+                v-bind:src="taskData.fields['Assignee Photo Lookup'][0].thumbnails.large.url"
+                alt="Avatar"
+              >
             </v-avatar>
           </div>
         </v-card-text>
