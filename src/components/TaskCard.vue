@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mt-2" color="grey" dark>
+  <v-card class="task-card mt-2" color="grey lighten-2" dark>
     <v-layout row wrap>
       <v-flex d-flex xs8>
         <v-card-text>
@@ -53,6 +53,9 @@ export default {
 </script>
 
 <style scoped>
+.task-card {
+  color: #000000;
+}
 .pull-right {
   float: right;
   text-align: right;

@@ -82,7 +82,7 @@
               <ul>
                 <transition-group name="list" tag="p">
                   <li v-for="task in filteredTasks" v-bind:key="task.id" class="list-item">
-                    <div v-if="task.fields.Week === ''">
+                    <div v-if="task.fields.Status !== 'Done' && (!task.fields.Week || task.fields.Week.length === 0)">
                       <TaskCard :task="task" :key="task.id"></TaskCard>
                     </div>
                   </li>
