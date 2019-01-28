@@ -16,9 +16,7 @@ export default {
         fields: {
           Name: ''
         }
-      },
-      projectsInFilter: [],
-      isInFilter: false
+      }
     }
   },
   computed: {
@@ -28,6 +26,9 @@ export default {
       } else {
         return 'blue lighten-1'
       }
+    },
+    isInFilter () {
+      return this.$store.getters.getAirtableProjectFilter.includes(this.projectData.fields.Name)
     }
   },
   methods: {
@@ -49,19 +50,6 @@ export default {
   },
   created () {
     this.projectData.fields.Name = this.project.fields.Name
-    // watch state for updates to projects in the project filter
-    this.$store.watch((state) => {
-      return this.$store.getters.getAirtableProjectFilter
-    }, (newValue, oldValue) => {
-      if (newValue) {
-        this.projectsInFilter = newValue
-        if (newValue.includes(this.project.fields.Name)) {
-          this.isInFilter = true
-        } else {
-          this.isInFilter = false
-        }
-      }
-    })
   }
 }
 </script>
