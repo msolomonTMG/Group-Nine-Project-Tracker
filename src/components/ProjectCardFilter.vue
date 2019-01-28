@@ -2,6 +2,7 @@
   <v-card class="mt-1" v-bind:color="color" dark>
     <v-card-text @click="toggleProjectFilter(projectData.fields.Name)">
       {{ projectData.fields.Name }}
+      <v-progress-linear v-model="projectData.fields.Progress"></v-progress-linear>
     </v-card-text>
   </v-card>
 </template>
@@ -14,7 +15,8 @@ export default {
     return {
       projectData: {
         fields: {
-          Name: ''
+          Name: '',
+          Progress: ''
         }
       }
     }
@@ -49,6 +51,7 @@ export default {
   },
   created () {
     this.projectData.fields.Name = this.project.fields.Name
+    this.projectData.fields.Progress = this.project.fields.Progress
   }
 }
 </script>
