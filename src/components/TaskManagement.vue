@@ -62,69 +62,30 @@
               </small>
             </h3>
           </v-card-text>
-          <v-card color="green lighten-1" dark>
-            <v-card-text><h4>Week 1</h4></v-card-text>
-            <v-container>
-              <v-card color="purple lighten-2" dark>
-                <v-card-text>{{ lorem.slice(0, 100) }}</v-card-text>
-              </v-card>
-              <v-card color="orange lighten-2" dark>
-                <v-card-text>{{ lorem.slice(0, 100) }}</v-card-text>
-              </v-card>
-              <v-card color="pink lighten-2" dark>
-                <v-card-text>{{ lorem.slice(0, 100) }}</v-card-text>
-              </v-card>
-            </v-container>
-          </v-card>
-          <v-card color="green lighten-1" dark>
-            <v-card-text><h4>Week 2</h4></v-card-text>
-            <v-container>
-              <v-card color="purple lighten-2" dark>
-                <v-card-text>{{ lorem.slice(0, 100) }}</v-card-text>
-              </v-card>
-              <v-card color="orange lighten-2" dark>
-                <v-card-text>{{ lorem.slice(0, 100) }}</v-card-text>
-              </v-card>
-              <v-card color="pink lighten-2" dark>
-                <v-card-text>{{ lorem.slice(0, 100) }}</v-card-text>
-              </v-card>
-            </v-container>
-          </v-card>
+          <div v-for="week in weeks">
+            <v-card color="green lighten-1" dark>
+              <v-card-text><h4>Week of {{ week.fields.Name }}</h4></v-card-text>
+              <v-container>
+                <ul>
+                  <li v-for="task in filteredTasks" v-bind:key="task.id" class="list-item">
+                    <div v-if="week.fields.Tasks.includes(task.id)">
+                      <TaskCard :task="task" :key="task.id"></TaskCard>
+                    </div>
+                  </li>
+                </ul>
+              </v-container>
+            </v-card>
+          </div>
           <v-card color="green lighten-1" dark>
             <v-card-text><h4>Backlog</h4></v-card-text>
             <v-container>
               <ul>
                 <transition-group name="list" tag="p">
                   <li v-for="task in filteredTasks" v-bind:key="task.id" class="list-item">
-                  <v-card class="mt-2" color="purple lighten-2" dark>
-                    <v-layout row wrap>
-                      <v-flex d-flex xs8>
-                        <v-card-text>
-                          {{ task.fields.Name }}
-                        </v-card-text>
-                      </v-flex>
-                      <v-flex d-flex xs4>
-                        <v-card-text>
-                          <div class="pull-right pr-15">
-                            <v-chip v-if="task.fields['Project Name Rollup'] && task.fields['Project Name Rollup'].length > 20">
-                              {{ task.fields['Project Name Rollup'].slice(0,20).trim() }}...
-                            </v-chip>
-                            <v-chip v-else-if="task.fields['Project Name Rollup'] && task.fields['Project Name Rollup'].length <= 20">
-                              {{ task.fields['Project Name Rollup'] }}
-                            </v-chip>
-                            <v-avatar size="32px">
-                            <img
-                              v-if="task.fields['Assignee Photo Lookup']"
-                              v-bind:src="task.fields['Assignee Photo Lookup'][0].thumbnails.large.url"
-                              alt="Avatar"
-                            >
-                            </v-avatar>
-                          </div>
-                        </v-card-text>
-                      </v-flex>
-                    </v-layout>
-                  </v-card>
-                </li>
+                    <div v-if="task.fields.Week === ''">
+                      <TaskCard :task="task" :key="task.id"></TaskCard>
+                    </div>
+                  </li>
                 </transition-group>
               </ul>
             </v-container>
@@ -138,6 +99,7 @@
 <script>
 import ProjectCardFilter from './ProjectCardFilter.vue'
 import PhaseCardFilter from './PhaseCardFilter.vue'
+import TaskCard from './TaskCard.vue'
 
 export default {
   name: 'TaskManagment',
@@ -146,6 +108,7 @@ export default {
       tasks: [],
       phases: [],
       projects: [],
+      weeks: [],
       taskFilter: '',
       phaseFilter: '',
       projectFilter: '',
@@ -183,7 +146,8 @@ export default {
   },
   components: {
     ProjectCardFilter,
-    PhaseCardFilter
+    PhaseCardFilter,
+    TaskCard
   },
   methods: {
     sortProjectsAlphabetically (projects) {
@@ -195,16 +159,22 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch('setAirtableTasks', { filters: '' })
+    this.$store.dispatch('setAirtableTasks', {
+      filters: '{Week is Preceding, Present, Future, or Empty} = 1'
+    })
     this.$store.dispatch('setAirtablePhases', {
       filters: '{Is Project Marked Done} = 0'
     })
     this.$store.dispatch('setAirtableProjects', {
       filters: 'Done = 0'
     })
+    this.$store.dispatch('setAirtableWeeks', {
+      filters: 'AND({Is Preceding, Present, or Future Week}, Tasks != "")'
+    })
     this.tasks = this.$store.getters.getAirtableTasks
     this.phases = this.$store.getters.getAirtablePhases
     this.projects = this.$store.getters.getAirtableProjects
+    this.weeks = this.$store.getters.getAirtableWeeks
     // watch state for updates to tasks
     this.$store.watch((state) => {
       return this.$store.getters.getAirtableTasks
@@ -227,6 +197,14 @@ export default {
     }, (newValue, oldValue) => {
       if (newValue) {
         this.sortProjectsAlphabetically(newValue)
+      }
+    })
+    // watch state for updates to weeks
+    this.$store.watch((state) => {
+      return this.$store.getters.getAirtableWeeks
+    }, (newValue, oldValue) => {
+      if (newValue) {
+        this.weeks = newValue
       }
     })
     // watch state for updated to project filter
@@ -275,7 +253,7 @@ export default {
         })
       } else {
         this.$store.dispatch('setAirtableTasks', {
-          filters: ''
+          filters: '{Week is Preceding, Present, Future, or Empty} = 1'
         })
       }
     })
@@ -297,12 +275,5 @@ li {
 .list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
   opacity: 0;
   transform: translateY(30px);
-}
-.pull-right {
-  float: right;
-  text-align: right;
-}
-.pr-15 {
-  padding-right: 15px;
 }
 </style>

@@ -108,6 +108,21 @@ export const actions = {
       return commit('setAirtableTasks', tasks)
     })
   },
+  setAirtableWeeks ({commit}, payload) {
+    let weeks = []
+    airtableBase('Weeks').select({
+      view: 'All Weeks',
+      filterByFormula: payload.filters
+    }).eachPage(function page (records, fetchNextPage) {
+      records.forEach(record => {
+        weeks.push(record)
+      })
+      fetchNextPage()
+    }, function done (err) {
+      if (err) { console.error(err); return }
+      return commit('setAirtableWeeks', weeks)
+    })
+  },
   setAirtableProjectFilter ({commit}, payload) {
     return commit('setAirtableProjectFilter', payload.projects)
   },
