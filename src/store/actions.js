@@ -111,6 +111,9 @@ export const actions = {
   setAirtableProjectFilter ({commit}, payload) {
     return commit('setAirtableProjectFilter', payload.projects)
   },
+  setAirtablePhaseFilter ({commit}, payload) {
+    return commit('setAirtablePhaseFilter', payload.phases)
+  },
   userSignUp ({commit}, payload) {
     commit('setLoading', true)
     firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)

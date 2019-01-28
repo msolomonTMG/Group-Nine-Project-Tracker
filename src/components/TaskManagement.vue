@@ -40,11 +40,11 @@
           </v-card-text>
           <ul>
             <li v-for="phase in filteredPhases">
-              <v-card class="mt-1" dark>
-                <v-card-text>
-                  {{ phase.fields.Name }}
-                </v-card-text>
-              </v-card>
+              <PhaseCardFilter 
+                :phase="phase"
+                :key="phase.id"
+              >
+              </PhaseCardFilter>
             </li>
           </ul>
         </v-card>
@@ -137,6 +137,7 @@
 
 <script>
 import ProjectCardFilter from './ProjectCardFilter.vue'
+import PhaseCardFilter from './PhaseCardFilter.vue'
 
 export default {
   name: 'TaskManagment',
@@ -181,7 +182,8 @@ export default {
     }
   },
   components: {
-    ProjectCardFilter
+    ProjectCardFilter,
+    PhaseCardFilter
   },
   methods: {
     sortProjectsAlphabetically (projects) {
@@ -251,6 +253,28 @@ export default {
           filters: ''
         })
         this.$store.dispatch('setAirtablePhases', {
+          filters: ''
+        })
+      }
+    })
+    // watch state for updated to phase filter
+    this.$store.watch((state) => {
+      return this.$store.getters.getAirtablePhaseFilter
+    }, (newValue, oldValue) => {
+      if (newValue && newValue.length > 0) {
+        let filterFormula = 'OR('
+        for (const [index, phaseName] of newValue.entries()) {
+          filterFormula += `Phase = "${phaseName}"`
+          // if its not the last project, add a comma
+          if (index + 1 !== newValue.length) {
+            filterFormula += ','
+          }
+        }
+        this.$store.dispatch('setAirtableTasks', {
+          filters: filterFormula + ')'
+        })
+      } else {
+        this.$store.dispatch('setAirtableTasks', {
           filters: ''
         })
       }

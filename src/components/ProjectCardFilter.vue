@@ -32,7 +32,6 @@ export default {
     }
   },
   methods: {
-    // project names is an array of strings
     toggleProjectFilter (projectName) {
       let projectsInFilter = this.$store.getters.getAirtableProjectFilter
       if (projectsInFilter.includes(projectName)) {
