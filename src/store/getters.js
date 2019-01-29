@@ -32,6 +32,9 @@ export const getters = {
   getAirtableWeeks (state) {
     return state.airtableWeeks
   },
+  getAirtableTaskFilter (state) {
+    return state.airtableTaskFilter
+  },
   getAirtableProjectFilter (state) {
     return state.airtableProjectFilter
   },

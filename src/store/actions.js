@@ -126,6 +126,9 @@ export const actions = {
       return commit('setAirtableWeeks', weeks)
     })
   },
+  setAirtableTaskFilter ({commit}, payload) {
+    return commit('setAirtableTaskFilter', payload)
+  },
   setAirtableProjectFilter ({commit}, payload) {
     return commit('setAirtableProjectFilter', payload.projects)
   },

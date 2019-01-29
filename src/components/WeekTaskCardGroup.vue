@@ -12,7 +12,7 @@
           :id="weekData.id"
           tag="p"
         >
-          <li v-for="task in filteredTasksInWeek" v-bind:key="task.id" class="list-item">
+          <li v-for="task in filteredTasksInWeek" v-bind:key="task.id" :id="task.id" class="list-item">
             <TaskCard :task="task" :key="task.id"></TaskCard>
           </li>
         </transition-group>
@@ -24,6 +24,8 @@
 <script>
 import TaskCard from './TaskCard.vue'
 import draggable from 'vuedraggable'
+import Airtable from 'airtable'
+import { airtableConfig } from '../config'
 
 export default {
   name: 'WeekTaskCardGroup',
@@ -35,11 +37,13 @@ export default {
     }
   },
   created () {
-    console.log('created week')
     this.tasks = this.filteredTasks
     this.weekData = this.week
   },
   computed: {
+    airtableTaskFilter () {
+      return this.$store.getters.getAirtableTaskFilter
+    },
     filteredTasksInWeek: {
       set (newValue) {
         return this.tasks.filter(task => {
@@ -58,6 +62,17 @@ export default {
     draggable
   },
   methods: {
+    updateTaskWeek (taskId, weekId) {
+      let airtableBase = new Airtable({apiKey: airtableConfig.apiKey}).base(airtableConfig.base)
+      airtableBase('Tasks').update(`${taskId}`, {
+        'Week': [`${weekId}`]
+      }, (err, record) => {
+        if (err) { console.error(err); return }
+        this.$store.dispatch('setAirtableTasks', {
+          filters: this.airtableTaskFilter
+        })
+      })
+    },
     onChange (evt) {
       console.log('On Change')
       console.log(evt.item)
@@ -74,6 +89,9 @@ export default {
       console.log(evt.oldIndex)
       console.log(evt.newIndex)
       evt.to.insertBefore(evt.item, evt.to.children[evt.item.newIndex])
+      console.log(evt.item.id)
+      console.log(evt.to.id)
+      this.updateTaskWeek(evt.item.id, evt.to.id)
     }
   }
 }

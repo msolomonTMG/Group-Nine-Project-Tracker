@@ -125,7 +125,21 @@ export default {
       lorem: `Lorem ipsum dolor sit amet, mel at clita quando. Te sit oratio vituperatoribus, nam ad ipsum posidonium mediocritatem, explicari dissentiunt cu mea. Repudiare disputationi vim in, mollis iriure nec cu, alienum argumentum ius ad. Pri eu justo aeque torquatos.`
     }
   },
+  watch: {
+    airtableTaskFilter (data) {
+      this.airtableTaskFilter = data
+    }
+  },
   computed: {
+    airtableTaskFilter: {
+      set () {
+        return this.$store.dispatch('setAirtableTaskFilter',
+          '{Week is Preceding, Present, Future, or Empty} = 1')
+      },
+      get () {
+        return this.$store.getters.getAirtableTaskFilter
+      }
+    },
     filteredTasks: {
       set (newValue) {
         return this.tasks.filter(task => {
@@ -133,7 +147,6 @@ export default {
         })
       },
       get () {
-        console.log('NEW FILTERED TASKS')
         if (!this.tasks) {
           return []
         } else {
@@ -194,6 +207,10 @@ export default {
         return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
       })
     }
+  },
+  beforeCreate () {
+    this.$store.dispatch('setAirtableTaskFilter',
+      '{Week is Preceding, Present, Future, or Empty} = 1')
   },
   created () {
     this.$store.dispatch('setAirtableTasks', {
