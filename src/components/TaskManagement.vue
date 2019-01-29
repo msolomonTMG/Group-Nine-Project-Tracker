@@ -65,28 +65,36 @@
           <div v-for="week in weeks">
             <v-card color="green lighten-1" dark>
               <v-card-text><h4>Week of {{ week.fields.Name }}</h4></v-card-text>
-              <v-container>
-                <ul>
-                  <li v-for="task in filteredTasks" v-bind:key="task.id" class="list-item">
-                    <div v-if="week.fields.Tasks.includes(task.id)">
-                      <TaskCard :task="task" :key="task.id"></TaskCard>
-                    </div>
-                  </li>
-                </ul>
-              </v-container>
+              <WeekTaskCardGroup 
+                :filteredTasks="filteredTasks" 
+                :week="week"
+                :key="filteredTasks.length"
+              >
+              </WeekTaskCardGroup>
             </v-card>
           </div>
           <v-card color="green lighten-1" dark>
             <v-card-text><h4>Backlog</h4></v-card-text>
             <v-container>
               <ul>
-                <transition-group name="list" tag="p">
-                  <li v-for="task in filteredTasks" v-bind:key="task.id" class="list-item">
-                    <div v-if="task.fields.Status !== 'Done' && (!task.fields.Week || task.fields.Week.length === 0)">
-                      <TaskCard :task="task" :key="task.id"></TaskCard>
-                    </div>
-                  </li>
-                </transition-group>
+                <draggable 
+                  v-model="filteredTasks" 
+                  :options="{ group: 'tasks' }" 
+                  @start="drag=true" 
+                  @end="onEnd"
+                  @change="onChange"
+                >
+                  <transition-group 
+                    name="backlog" 
+                    tag="p"
+                  >
+                    <li v-for="task in filteredTasks" v-bind:key="task.id" class="list-item">
+                      <div v-if="task.fields.Status !== 'Done' && (!task.fields.Week || task.fields.Week.length === 0)">
+                        <TaskCard :task="task" :key="task.id"></TaskCard>
+                      </div>
+                    </li>
+                  </transition-group>
+                </draggable>
               </ul>
             </v-container>
           </v-card>
@@ -100,6 +108,8 @@
 import ProjectCardFilter from './ProjectCardFilter.vue'
 import PhaseCardFilter from './PhaseCardFilter.vue'
 import TaskCard from './TaskCard.vue'
+import WeekTaskCardGroup from './WeekTaskCardGroup.vue'
+import draggable from 'vuedraggable'
 
 export default {
   name: 'TaskManagment',
@@ -116,13 +126,21 @@ export default {
     }
   },
   computed: {
-    filteredTasks () {
-      if (!this.tasks) {
-        return []
-      } else {
+    filteredTasks: {
+      set (newValue) {
         return this.tasks.filter(task => {
           return task.fields.Name.toLowerCase().includes(this.taskFilter.toLowerCase())
         })
+      },
+      get () {
+        console.log('NEW FILTERED TASKS')
+        if (!this.tasks) {
+          return []
+        } else {
+          return this.tasks.filter(task => {
+            return task.fields.Name.toLowerCase().includes(this.taskFilter.toLowerCase())
+          })
+        }
       }
     },
     filteredPhases () {
@@ -147,9 +165,28 @@ export default {
   components: {
     ProjectCardFilter,
     PhaseCardFilter,
-    TaskCard
+    WeekTaskCardGroup,
+    TaskCard,
+    draggable
   },
   methods: {
+    onChange (evt) {
+      console.log('On Change')
+      console.log(evt.item)
+      console.log(evt.to)
+      console.log(evt.from)
+      console.log(evt.oldIndex)
+      console.log(evt.newIndex)
+    },
+    onEnd (evt) {
+      console.log('On End')
+      console.log(evt.item)
+      console.log(evt.to)
+      console.log(evt.from)
+      console.log(evt.oldIndex)
+      console.log(evt.newIndex)
+      evt.to.insertBefore(evt.item, evt.to.children[evt.item.newIndex])
+    },
     sortProjectsAlphabetically (projects) {
       this.projects = projects.sort(function (a, b) {
         let textA = a.fields.Name.toUpperCase()

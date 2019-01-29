@@ -93,6 +93,9 @@ export const actions = {
       return commit('setAirtableStatuses', statuses)
     })
   },
+  setAirtableTasksLocally ({commit}, payload) {
+    return commit('setAirtableTasks', payload.tasks)
+  },
   setAirtableTasks ({commit}, payload) {
     let tasks = []
     airtableBase('Tasks').select({
