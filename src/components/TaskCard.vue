@@ -13,7 +13,10 @@
         <v-card-text>
           <div class="pull-right pr-15">
             <v-chip v-if="taskData.fields['Project Name Rollup'] && taskData.fields['Project Name Rollup'].length > 20">
-              {{ taskData.fields['Project Name Rollup'].slice(0,20).trim() }}...
+              <v-tooltip bottom>
+                <span slot="activator">{{ taskData.fields['Project Name Rollup'].slice(0,20).trim() }}...</span>
+                <span>{{ taskData.fields['Project Name Rollup'] }}</span>
+              </v-tooltip>
             </v-chip>
             <v-chip v-else-if="taskData.fields['Project Name Rollup'] && taskData.fields['Project Name Rollup'].length <= 20">
               {{ taskData.fields['Project Name Rollup'] }}
